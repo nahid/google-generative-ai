@@ -1,0 +1,37 @@
+{
+    "name": "nahid/google-generative-ai",
+    "description": "A PHP package for Google Generative AI service",
+    "type": "library",
+    "require": {
+        "php": ">=8.1",
+        "guzzlehttp/guzzle": "^7.9",
+        "php-http/discovery": "^1.20",
+        "psr/http-message": "^2.0"
+    },
+    "require-dev": {
+        "guzzlehttp/psr7": "^2.7",
+        "pestphp/pest": "^2.36",
+        "symfony/var-dumper": "^6.4"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nahid\\GoogleGenerativeAI\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Nahid Bin Azhar",
+            "email": "nahid.dns@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "config": {
+        "sort-packages": true,
+        "preferred-install": "dist",
+        "allow-plugins": {
+            "pestphp/pest-plugin": true,
+            "php-http/discovery": false
+        }
+    }
+}
