@@ -107,7 +107,14 @@ class Payload
                 $body = $this->body;
             } else {
                $this->withContentType(ContentType::JSON->value);
-               $body = $psr17Factory->createStream(json_encode($this->parameters, JSON_THROW_ON_ERROR));
+               $data = [];
+
+               if (is_array($this->body)) {
+                   $data = $this->body;
+               } else {
+                   $data = $this->parameters->toArray();
+               }
+               $body = $psr17Factory->createStream(json_encode($data, JSON_THROW_ON_ERROR));
             }
 
         }

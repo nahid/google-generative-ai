@@ -4,11 +4,12 @@ require_once __DIR__ . '/../vendor/autoload.php';
 
 use Nahid\GoogleGenerativeAI\GoogleGenAI;
 
-$client = GoogleGenAI::client()
+$client = GoogleGenAI::client('keyY')
     ->make();
 
 $resp = $client->prompt()
-    ->withImage('/Users/nahid/Desktop/image.jpeg');
+    ->withImage('C:\Users\nahid\Pictures\Registration-Open.png')
+    ->generate('Describe the given image');
 
 dd($resp->getBody()->getContents());
 

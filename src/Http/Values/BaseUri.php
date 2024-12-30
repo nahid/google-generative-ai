@@ -19,6 +19,11 @@ class BaseUri
         return new self($baseUri);
     }
 
+    public function new(): self
+    {
+        return new self($this->baseUri);
+    }
+
     /**
      * {@inheritdoc}
      */
