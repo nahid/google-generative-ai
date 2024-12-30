@@ -10,3 +10,4 @@
 /media                  export-ignore
 /data.json              export-ignore
 /index.php              export-ignore
+/example                export-ignore
