@@ -5,6 +5,7 @@ namespace Nahid\GoogleGenerativeAI\Http;
 use Closure;
 use Http\Discovery\Psr17Factory;
 use Nahid\GoogleGenerativeAI\Enums\Http\Method;
+use Nahid\GoogleGenerativeAI\Enums\Http\RequestType;
 use Nahid\GoogleGenerativeAI\Http\Values\BaseUri;
 use Nahid\GoogleGenerativeAI\Http\Values\Payload;
 use Psr\Http\Client\ClientInterface;
@@ -16,7 +17,6 @@ class Transporter
 
     public function __construct(
         private readonly ClientInterface $httpClient,
-        private readonly Payload $payload,
         private readonly Closure $streamHandler,
     )
     {
@@ -24,52 +24,51 @@ class Transporter
     }
 
 
-    public function requestContent(): ResponseInterface
+    public function requestContent(Payload $payload): ResponseInterface
     {
-        $request = $this->payload->toRequest('models/gemini-1.5-flash:generateContent');
+        $request = $payload->toRequest();
 
-        return $this->request(function () use ($request) {
+        return $this->send(function () use ($request) {
             return $this->httpClient->sendRequest($request);
         });
     }
 
-    public function request(Closure $callable): ResponseInterface
+
+    public function requestFile(): ResponseInterface
+    {
+        $request = $this->payload->toRequest(RequestType::FILE);
+
+        return $this->send(function () use ($request) {
+            return $this->httpClient->sendRequest($request);
+        });
+    }
+
+    public function requestObject(Payload $payload): ResponseInterface
+    {
+        $request = $payload->toRequest(RequestType::UPLOAD);
+
+        return $this->send(function (ClientInterface $client) use ($request) {
+            return $client->sendRequest($request);
+        });
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function requestStream(Payload $payload): ResponseInterface
+    {
+        $request = $payload->toRequest(RequestType::STREAM);
+
+        return $this->send(fn (ClientInterface $client) => ($this->streamHandler)($request));
+    }
+
+    public function send(Closure $callable): ResponseInterface
     {
         try {
-            return $callable($this->payload);
+            return $callable($this->httpClient);
         } catch (\Exception $e) {
             throw $e;
         }
-    }
-
-    public function makeRequest(Payload $payload): RequestInterface
-    {
-        $psr17Factory = new Psr17Factory();
-
-        $request = $psr17Factory->createRequest($payload->method()->value, $payload->getBaseUri());
-
-        foreach ($payload->headers()->toArray() as $key => $value) {
-            $request = $request->withHeader($key, $value);
-        }
-
-        if ($payload->method() === Method::POST) {
-            $request = $request->withBody($psr17Factory->createStream(json_encode($payload->getBody())));
-        }
-
-        $queryParams = '';
-
-        if (!empty($payload->queryParams()->toArray())) {
-            $queryParams = http_build_query($payload->queryParams()->toArray());
-        }
-
-
-        $request = $request->withUri($request->getUri()->withQuery($queryParams));
-
-
-
-
-        return $request;
-
     }
 
     public function getPayload(): Payload

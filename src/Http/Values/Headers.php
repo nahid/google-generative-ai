@@ -33,11 +33,10 @@ final class Headers
         return $this;
     }
 
-    public function set()
+    public function get(string $key): string
     {
-        
+        return $this->headers[$key] ?? '';
     }
-
     public function toArray(): array
     {
         return $this->headers;

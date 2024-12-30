@@ -18,7 +18,7 @@ class Text
      */
     public function generate(string $prompt)
     {
-        $payload = $this->transporter->getPayload()->setBody([
+        $payload = $this->transporter->getPayload()->withBody([
             'contents' => [
                 'parts' => [
                     [
@@ -29,9 +29,29 @@ class Text
         ]);
 
         $payload->headers()->withContentType(ContentType::JSON);
-        $response = $this->transporter->requestContent();
 
-        dd($response->getStatusCode(), $response->getBody()->getContents());
+        return $this->transporter->requestContent();
+    }
+
+
+    /**
+     * @throws \Exception
+     */
+    public function stream(string $prompt)
+    {
+        $payload = $this->transporter->getPayload()->withBody([
+            'contents' => [
+                'parts' => [
+                    [
+                        'text' => $prompt
+                    ]
+                ]
+            ]
+        ]);
+
+        $payload->headers()->withContentType(ContentType::JSON);
+
+        return $this->transporter->requestStream();
     }
 
 }

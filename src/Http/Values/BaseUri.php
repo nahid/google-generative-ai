@@ -6,7 +6,9 @@ class BaseUri
 {
 
 
-    public function __construct(private string $baseUri)
+    public function __construct(
+        private string $baseUri,
+    )
     {
     }
     /**
@@ -24,17 +26,19 @@ class BaseUri
     {
         foreach (['http://', 'https://'] as $protocol) {
             if (str_starts_with($this->baseUri, $protocol)) {
-                return "{$this->trim()}/";
+                return "{$this->trim()}";
             }
         }
 
-        return "https://{$this->trim()}/";
+        return "https://{$this->trim()}";
     }
 
-    public function append(string $path): string
+    public function append(string $path): static
     {
-        $path = ltrim(rtrim($path, '/'), '/');
-        return "{$this->toString()}{$path}";
+        $path = '/' . ltrim(rtrim($path, '/'), '/');
+        $this->baseUri = "{$this->toString()}{$path}";
+
+        return $this;
     }
 
     private function trim(): string
