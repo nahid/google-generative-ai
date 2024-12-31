@@ -1,8 +1,6 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Http\Values;
-
-use Nahid\GoogleGenerativeAI\Enums\Http\ContentType;
+namespace Nahid\GoogleGenerativeAI\Prompts\Http\Values;
 
 final class QueryParams
 {

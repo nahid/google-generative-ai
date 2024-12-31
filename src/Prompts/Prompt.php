@@ -1,15 +1,14 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI;
+namespace Nahid\GoogleGenerativeAI\Prompts;
 
 use Exception;
 use GuzzleHttp\ClientInterface;
 use Http\Discovery\Psr17Factory;
-use Nahid\GoogleGenerativeAI\Enums\Http\ContentType;
-use Nahid\GoogleGenerativeAI\Enums\Http\RequestType;
-use Nahid\GoogleGenerativeAI\Http\Transporter;
-use Nahid\GoogleGenerativeAI\Http\Values\BaseUri;
-use Nahid\GoogleGenerativeAI\Http\Values\Payload;
+use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\RequestType;
+use Nahid\GoogleGenerativeAI\Prompts\Http\Transporter;
+use Nahid\GoogleGenerativeAI\Prompts\Http\Values\BaseUri;
+use Nahid\GoogleGenerativeAI\Prompts\Http\Values\Payload;
 
 class Prompt
 {

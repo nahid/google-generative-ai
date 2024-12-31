@@ -2,13 +2,14 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Nahid\GoogleGenerativeAI\GoogleGenAI;
+use Nahid\GoogleGenerativeAI\Prompts\GoogleGenAI;
 
-$client = GoogleGenAI::client()
+$client = GoogleGenAI::client('AIzaSyA8TNQGf4Gw1TvYcee7eJQ0qi-2ZpdSsOY')
     ->make();
 
 $resp = $client->prompt()
-    ->withImage('/Users/nahid/Desktop/image.jpeg');
+    ->withImage('/Users/nahid/Desktop/moon_expectation.jpeg')
+    ->generate("Describe the image");
 
 dd($resp->getBody()->getContents());
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Http\Values;
+namespace Nahid\GoogleGenerativeAI\Prompts\Http\Values;
 
 class BaseUri
 {

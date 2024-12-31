@@ -1,15 +1,11 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Http;
+namespace Nahid\GoogleGenerativeAI\Prompts\Http;
 
 use Closure;
-use Http\Discovery\Psr17Factory;
-use Nahid\GoogleGenerativeAI\Enums\Http\Method;
-use Nahid\GoogleGenerativeAI\Enums\Http\RequestType;
-use Nahid\GoogleGenerativeAI\Http\Values\BaseUri;
-use Nahid\GoogleGenerativeAI\Http\Values\Payload;
+use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\RequestType;
+use Nahid\GoogleGenerativeAI\Prompts\Http\Values\Payload;
 use Psr\Http\Client\ClientInterface;
-use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 
 class Transporter

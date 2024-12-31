@@ -1,10 +1,9 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Resources;
+namespace Nahid\GoogleGenerativeAI\Prompts\Resources;
 
-use Nahid\GoogleGenerativeAI\Enums\Http\ContentType;
-use Nahid\GoogleGenerativeAI\Http\Values\Payload;
-use Nahid\GoogleGenerativeAI\Http\Transporter;
+use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\ContentType;
+use Nahid\GoogleGenerativeAI\Prompts\Http\Transporter;
 
 class Text
 {

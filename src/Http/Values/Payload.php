@@ -1,14 +1,13 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Http\Values;
+namespace Nahid\GoogleGenerativeAI\Prompts\Http\Values;
 
 use Http\Discovery\Psr17Factory;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
-use Nahid\GoogleGenerativeAI\Enums\Http\ContentType;
-use Nahid\GoogleGenerativeAI\Enums\Http\Method;
-use Nahid\GoogleGenerativeAI\Enums\Http\RequestType;
+use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\ContentType;
+use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\Method;
+use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\RequestType;
 use Psr\Http\Message\RequestInterface;
-use Psr\Http\Message\StreamInterface;
 
 class Payload
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Enums\Http;
+namespace Nahid\GoogleGenerativeAI\Prompts\Enums\Http;
 
 enum ContentType: string
 {

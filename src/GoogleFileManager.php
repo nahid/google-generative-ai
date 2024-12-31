@@ -1,6 +1,6 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI;
+namespace Nahid\GoogleGenerativeAI\Prompts;
 
 class GoogleFileManager
 {
