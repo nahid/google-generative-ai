@@ -1,6 +1,6 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Prompts\Http\Values;
+namespace Nahid\GoogleGenerativeAI\Http\Values;
 
 class BaseUri
 {
@@ -17,6 +17,11 @@ class BaseUri
     public static function from(string $baseUri): self
     {
         return new self($baseUri);
+    }
+
+    public function new(): self
+    {
+        return new self($this->baseUri);
     }
 
     /**

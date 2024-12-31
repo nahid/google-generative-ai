@@ -1,12 +1,12 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Prompts\Http\Values;
+namespace Nahid\GoogleGenerativeAI\Http\Values;
 
 use Http\Discovery\Psr17Factory;
 use Http\Message\MultipartStream\MultipartStreamBuilder;
-use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\ContentType;
-use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\Method;
-use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\RequestType;
+use Nahid\GoogleGenerativeAI\Enums\Http\ContentType;
+use Nahid\GoogleGenerativeAI\Enums\Http\Method;
+use Nahid\GoogleGenerativeAI\Enums\Http\RequestType;
 use Psr\Http\Message\RequestInterface;
 
 class Payload
@@ -106,7 +106,14 @@ class Payload
                 $body = $this->body;
             } else {
                $this->withContentType(ContentType::JSON->value);
-               $body = $psr17Factory->createStream(json_encode($this->parameters, JSON_THROW_ON_ERROR));
+               $data = [];
+
+               if (is_array($this->body)) {
+                   $data = $this->body;
+               } else {
+                   $data = $this->parameters->toArray();
+               }
+               $body = $psr17Factory->createStream(json_encode($data, JSON_THROW_ON_ERROR));
             }
 
         }

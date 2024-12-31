@@ -1,6 +1,6 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Prompts\Enums\Http;
+namespace Nahid\GoogleGenerativeAI\Enums\Http;
 
 enum RequestType
 {

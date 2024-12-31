@@ -1,6 +1,6 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Prompts\Http\Values;
+namespace Nahid\GoogleGenerativeAI\Http\Values;
 
 final class Parameters
 {

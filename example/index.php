@@ -2,14 +2,13 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-use Nahid\GoogleGenerativeAI\Prompts\GoogleGenAI;
+use Nahid\GoogleGenerativeAI\GoogleGenAI;
 
-$client = GoogleGenAI::client('AIzaSyA8TNQGf4Gw1TvYcee7eJQ0qi-2ZpdSsOY')
+$client = GoogleGenAI::client(getenv('GEMINI_API_KEY'))
     ->make();
 
 $resp = $client->prompt()
-    ->withImage('/Users/nahid/Desktop/moon_expectation.jpeg')
-    ->generate("Describe the image");
+    ->generate("give me a brief of AI Agentic Model");
 
 dd($resp->getBody()->getContents());
 

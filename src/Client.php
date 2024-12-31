@@ -1,19 +1,19 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Prompts;
+namespace Nahid\GoogleGenerativeAI;
 
 use Closure;
 use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use Http\Discovery\Psr18Client;
 use Http\Discovery\Psr18ClientDiscovery;
-use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\RequestType;
-use Nahid\GoogleGenerativeAI\Prompts\Http\Transporter;
-use Nahid\GoogleGenerativeAI\Prompts\Http\Values\BaseUri;
+use Nahid\GoogleGenerativeAI\Http\Transporter;
+use Nahid\GoogleGenerativeAI\Enums\Http\RequestType;
+use Nahid\GoogleGenerativeAI\Http\Values\BaseUri;
+use Nahid\GoogleGenerativeAI\Prompts\Prompt;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-
 class Client
 {
     private ?ClientInterface $httpClient = null;

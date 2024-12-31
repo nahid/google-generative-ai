@@ -1,10 +1,10 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Prompts\Http;
+namespace Nahid\GoogleGenerativeAI\Http;
 
 use Closure;
-use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\RequestType;
-use Nahid\GoogleGenerativeAI\Prompts\Http\Values\Payload;
+use Nahid\GoogleGenerativeAI\Enums\Http\RequestType;
+use Nahid\GoogleGenerativeAI\Http\Values\Payload;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\ResponseInterface;
 

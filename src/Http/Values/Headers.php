@@ -1,8 +1,8 @@
 <?php
 
-namespace Nahid\GoogleGenerativeAI\Prompts\Http\Values;
+namespace Nahid\GoogleGenerativeAI\Http\Values;
 
-use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\ContentType;
+use Nahid\GoogleGenerativeAI\Enums\Http\ContentType;
 
 final class Headers
 {

@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Nahid\GoogleGenerativeAI\Prompts;
+namespace Nahid\GoogleGenerativeAI;
+
+use Nahid\GoogleGenerativeAI\Client;
 
 class GoogleGenAI
 {

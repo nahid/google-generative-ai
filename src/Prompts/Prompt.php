@@ -5,13 +5,14 @@ namespace Nahid\GoogleGenerativeAI\Prompts;
 use Exception;
 use GuzzleHttp\ClientInterface;
 use Http\Discovery\Psr17Factory;
-use Nahid\GoogleGenerativeAI\Prompts\Enums\Http\RequestType;
-use Nahid\GoogleGenerativeAI\Prompts\Http\Transporter;
-use Nahid\GoogleGenerativeAI\Prompts\Http\Values\BaseUri;
-use Nahid\GoogleGenerativeAI\Prompts\Http\Values\Payload;
+use Nahid\GoogleGenerativeAI\Http\Transporter;
+use Nahid\GoogleGenerativeAI\Enums\Http\RequestType;
+use Nahid\GoogleGenerativeAI\Http\Values\BaseUri;
+use Nahid\GoogleGenerativeAI\Http\Values\Payload;
 
 class Prompt
 {
+    private array $files = [];
     public function __construct(
         private readonly Transporter $transporter,
         private readonly BaseUri $baseUri,
@@ -27,7 +28,7 @@ class Prompt
     {
         $url = $this->resumableUpload($path);
 
-       // $url = 'https://generativelanguage.googleapis.com/upload/v1beta/files/?key=AIzaSyA8TNQGf4Gw1TvYcee7eJQ0qi-2ZpdSsOY&upload_id=AFiumC5VrQI8HfjObGK23B8b0Njle_2LxBNGdT2UqxPUwRHuFjcwMRsRqK5f8xaJrc5uCiBw_Sw34VSpeeN5zRNdu3DTV1-MbUY_oZ9uJ-blfzU&upload_protocol=resumable';
+        // $url = 'https://generativelanguage.googleapis.com/upload/v1beta/files/?key=AIzaSyA8TNQGf4Gw1TvYcee7eJQ0qi-2ZpdSsOY&upload_id=AFiumC5VrQI8HfjObGK23B8b0Njle_2LxBNGdT2UqxPUwRHuFjcwMRsRqK5f8xaJrc5uCiBw_Sw34VSpeeN5zRNdu3DTV1-MbUY_oZ9uJ-blfzU&upload_protocol=resumable';
 
         $contents = file_get_contents($path);
         $mime = mime_content_type($path);
@@ -47,7 +48,17 @@ class Prompt
 
         $response = $transporter->requestObject($payload);
 
-        dd($response->getBody()->getContents());
+        $data = json_decode($response->getBody()->getContents(), true);
+
+
+        $this->files[] = [
+            'file_data' => [
+                'mime_type' => $mime,
+                'file_uri' =>  $data['file']['uri'],
+            ]
+        ];
+
+        return $this;
 
     }
 
@@ -56,7 +67,7 @@ class Prompt
         $transporter = $this->transporter;
 
         $payload = Payload::create()
-            ->withBaseUri($this->baseUri)
+            ->withBaseUri($this->baseUri->new())
             ->withModel($this->model)
             ->withVersion($this->version)
             ->withApiKey($this->key)
@@ -65,10 +76,12 @@ class Prompt
                     'parts' => [
                         [
                             'text' => $prompt
-                        ]
+                        ],
+                        ... $this->files
                     ]
                 ]
             ]);
+
 
         return $transporter->requestContent($payload);
     }
@@ -78,7 +91,7 @@ class Prompt
         $transporter = $this->transporter;
 
         $payload = Payload::create()
-            ->withBaseUri($this->baseUri)
+            ->withBaseUri($this->baseUri->new())
             ->withModel($this->model)
             ->withVersion($this->version)
             ->withApiKey($this->key)
@@ -105,10 +118,11 @@ class Prompt
 
         $transporter = $this->transporter;
         $payload = Payload::create()
-            ->withBaseUri($this->baseUri)
+            ->withBaseUri($this->baseUri->new())
             ->withModel($this->model)
             ->withVersion($this->version)
             ->withApiKey($this->key);
+
 
         $payload->headers()->add('Content-Type', $mime)
             ->add('X-Goog-Upload-Protocol', 'resumable')
