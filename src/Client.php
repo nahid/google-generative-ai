@@ -7,13 +7,15 @@ use Exception;
 use GuzzleHttp\Client as GuzzleClient;
 use Http\Discovery\Psr18Client;
 use Http\Discovery\Psr18ClientDiscovery;
-use Nahid\GoogleGenerativeAI\Http\Transporter;
 use Nahid\GoogleGenerativeAI\Enums\Http\RequestType;
+use Nahid\GoogleGenerativeAI\Http\Transporter;
 use Nahid\GoogleGenerativeAI\Http\Values\BaseUri;
+use Nahid\GoogleGenerativeAI\Prompts\DTOs\CredentialsDTO;
 use Nahid\GoogleGenerativeAI\Prompts\Prompt;
 use Psr\Http\Client\ClientInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
+
 class Client
 {
     private ?ClientInterface $httpClient = null;
@@ -159,7 +161,7 @@ class Client
 
     public function prompt(): Prompt
     {
-        return new Prompt($this->transporter, BaseUri::from($this->baseUri), $this->apiKey, $this->model, $this->version);
+        return new Prompt(CredentialsDTO::create($this->transporter, BaseUri::from($this->baseUri), $this->apiKey, $this->model, $this->version));
     }
 
 

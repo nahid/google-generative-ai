@@ -8,7 +8,8 @@ $client = GoogleGenAI::client(getenv('GEMINI_API_KEY'))
     ->make();
 
 $resp = $client->prompt()
-    ->generate("give me a brief of AI Agentic Model");
+    ->withAudio('/Users/nahid/Downloads/record.ogg')
+    ->generate("What this audio is about?");
 
 dd($resp->getBody()->getContents());
 

@@ -6,7 +6,7 @@ use Nahid\GoogleGenerativeAI\Contracts\UploadableContract;
 use Nahid\GoogleGenerativeAI\Prompts\DTOs\FileInfoDTO;
 use Nahid\GoogleGenerativeAI\Prompts\Uploadable;
 
-class Image implements UploadableContract
+class Audio implements UploadableContract
 {
     use Uploadable;
 
@@ -18,17 +18,18 @@ class Image implements UploadableContract
     public function validate(string $path): FileInfoDTO
     {
         $supportedMimeTypes = [
-            'image/jpeg',
-            'image/png',
-            'image/webp',
-            'image/heic',
-            'image/heif',
+            'audio/wav',
+            'audio/mp3',
+            'audio/aiff',
+            'audio/flac',
+            'audio/ogg',
+            'audio/aac',
         ];
 
         $mimeType = mime_content_type($path);
 
         if (! in_array($mimeType, $supportedMimeTypes)) {
-            throw new \Exception('The file must be a valid image file.');
+            throw new \Exception('The file must be a valid audio file.');
         }
 
         $name = basename($path);

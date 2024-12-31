@@ -4,6 +4,7 @@
     "type": "library",
     "require": {
         "php": ">=8.1",
+        "ext-fileinfo": "*",
         "guzzlehttp/guzzle": "^7.9",
         "php-http/discovery": "^1.20",
         "php-http/multipart-stream-builder": "^1.4",
