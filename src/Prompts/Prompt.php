@@ -10,6 +10,7 @@ use Nahid\GoogleGenerativeAI\Http\Values\BaseUri;
 use Nahid\GoogleGenerativeAI\Http\Values\Payload;
 use Nahid\GoogleGenerativeAI\Prompts\Concerns\Audio;
 use Nahid\GoogleGenerativeAI\Prompts\Concerns\Image;
+use Nahid\GoogleGenerativeAI\Prompts\Concerns\Video;
 use Nahid\GoogleGenerativeAI\Prompts\DTOs\CredentialsDTO;
 use Nahid\GoogleGenerativeAI\Prompts\DTOs\FileDataDTO;
 
@@ -40,6 +41,15 @@ class Prompt
     public function withAudio(string $path): self
     {
         $audio = new Audio($this->creds);
+
+        $this->files[] = $audio->upload($path);
+
+        return $this;
+    }
+
+    public function withVideo(string $path): self
+    {
+        $audio = new Video($this->creds);
 
         $this->files[] = $audio->upload($path);
 
