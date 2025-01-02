@@ -3,12 +3,12 @@
 namespace Nahid\GoogleGenerativeAI\Prompts;
 
 use Exception;
-use GuzzleHttp\ClientInterface;
-use Http\Discovery\Psr17Factory;
-use Nahid\GoogleGenerativeAI\Enums\Http\RequestType;
-use Nahid\GoogleGenerativeAI\Http\Values\BaseUri;
+use Nahid\GoogleGenerativeAI\Enums\RunType;
 use Nahid\GoogleGenerativeAI\Http\Values\Payload;
 use Nahid\GoogleGenerativeAI\Prompts\Concerns\Audio;
+use Nahid\GoogleGenerativeAI\Prompts\Concerns\Document;
+use Nahid\GoogleGenerativeAI\Prompts\Concerns\Functions\Func;
+use Nahid\GoogleGenerativeAI\Prompts\Concerns\GoogleSearch;
 use Nahid\GoogleGenerativeAI\Prompts\Concerns\Image;
 use Nahid\GoogleGenerativeAI\Prompts\Concerns\Video;
 use Nahid\GoogleGenerativeAI\Prompts\DTOs\CredentialsDTO;
@@ -20,6 +20,16 @@ class Prompt
      * @var array<int, FileDataDTO>
      */
     private array $files = [];
+    /**
+     * @var true
+     */
+    private bool $generateCode = false;
+
+    private array $tools = [];
+    private array $functionDeclarations = [];
+
+    private ?RunType $run = null;
+
     public function __construct(
      private readonly CredentialsDTO $creds
     )
@@ -49,12 +59,70 @@ class Prompt
 
     public function withVideo(string $path): self
     {
-        $audio = new Video($this->creds);
+        $video = new Video($this->creds);
 
-        $this->files[] = $audio->upload($path);
+        $this->files[] = $video->upload($path);
 
         return $this;
     }
+    public function withDocument(string $path): self
+    {
+        $document = new Document($this->creds);
+
+        $this->files[] = $document->upload($path);
+
+        return $this;
+    }
+
+    public function withFunctions(Func ...$fn): self
+    {
+        if (!is_null($this->run) && $this->run !== RunType::FUNCTION) {
+            throw new Exception('Cannot add functions with other generation types');
+        }
+
+        $this->run = RunType::FUNCTION;
+
+        $this->tools[] = [
+            'function_declarations' => array_map(fn(Func $func) => $func->toArray(), $fn),
+        ];
+
+        return $this;
+    }
+
+    /**
+     * @param string $mode
+     * @param float $threshold
+     * @return $this
+     * @throws Exception
+     */
+    public function wantsGoogleSearch(string $mode = 'MODE_DYNAMIC', float $threshold = 1): self
+    {
+        if (!is_null($this->run) && $this->run !== RunType::GOOGLE_SEARCH) {
+            throw new Exception('Cannot add google search with other generation types');
+        }
+
+        $google = new GoogleSearch($mode, $threshold);
+
+        $this->tools[] = $google->toArray();
+
+        return $this;
+    }
+
+    public function code(): self
+    {
+        if (!is_null($this->run) && $this->run !== RunType::CODE) {
+            throw new Exception('Cannot add code with other generation types');
+        }
+
+        $this->run = RunType::CODE;
+
+        $this->tools[] = [
+            'code_execution' => new \stdClass(),
+        ];
+
+        return $this;
+    }
+
 
     private function getFileDataParams(): array
     {
@@ -65,46 +133,41 @@ class Prompt
     {
         $transporter = $this->creds->getTransporter();
 
-        $payload = Payload::create()
-            ->withBaseUri($this->creds->getBaseUri()->new())
-            ->withModel($this->creds->getModel())
-            ->withVersion($this->creds->getVersion())
-            ->withApiKey($this->creds->getKey())
-            ->withBody([
-                'contents' => [
-                    'parts' => [
-                        [
-                            'text' => $prompt
-                        ],
-                        ... $this->getFileDataParams(),
-                    ]
-                ]
-            ]);
 
-
-        return $transporter->requestContent($payload);
+        return $transporter->requestContent($this->promptGenerate($prompt));
     }
 
     public function stream(string $prompt)
     {
         $transporter = $this->creds->getTransporter();
 
-        $payload = Payload::create()
+
+        return $transporter->requestStream($this->promptGenerate($prompt));
+    }
+
+    protected function promptGenerate(string $prompt): Payload
+    {
+        $payloadSchema = [
+            'contents' => [
+                'parts' => [
+                    [
+                        'text' => $prompt
+                    ],
+                    ... $this->getFileDataParams(),
+                ]
+            ]
+        ];
+
+        if (!empty($this->tools)) {
+            $payloadSchema['tools'] = $this->tools;
+        }
+
+        return Payload::create()
             ->withBaseUri($this->creds->getBaseUri()->new())
             ->withModel($this->creds->getModel())
             ->withVersion($this->creds->getVersion())
             ->withApiKey($this->creds->getKey())
-            ->withBody([
-                'contents' => [
-                    'parts' => [
-                        [
-                            'text' => $prompt
-                        ]
-                    ]
-                ]
-            ]);
-
-        return $transporter->requestStream($payload);
+            ->withBody($payloadSchema);
     }
 
 }

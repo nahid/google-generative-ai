@@ -84,4 +84,13 @@ trait Uploadable
         throw new Exception('Method did not implemented yet');
     }
 
+    protected function checkFileSize(string $file, int $maxSize): void
+    {
+        $filesize = filesize($file);
+        $filesizeMb = ceil($filesize / 1024 / 1024);
+        if ($filesizeMb > $maxSize) {
+            throw new Exception('The file size must be less than 10 MB.');
+        }
+    }
+
 }

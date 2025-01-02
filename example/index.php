@@ -3,28 +3,33 @@
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use Nahid\GoogleGenerativeAI\GoogleGenAI;
+use Nahid\GoogleGenerativeAI\Prompts\Concerns\Functions\Func;
+use Nahid\GoogleGenerativeAI\Prompts\Concerns\Functions\Parameter;
+
+
 
 $client = GoogleGenAI::client(getenv('GEMINI_API_KEY'))
     ->make();
 
-$resp = $client->prompt()
-    ->withAudio('/Users/nahid/Downloads/record.ogg')
-    ->generate("What this audio is about?");
-
-dd($resp->getBody()->getContents());
-
-$resp = $client->upload('/Users/nahid/Desktop/Screenshot 2024-12-08 at 1.29.41 PM.png');
-
-dd($resp->getBody()->getContents());
-
-$response = $client->text()->stream('What do you think about the future of AI in software development?');
-
-$stream = $response->getBody();
-
-// Check if the stream is readable
-if ($stream->isReadable()) {
-    while (!$stream->eof()) {
-        echo $stream->read(1024); // Read 1024 bytes at a time
-    }
+try {
+    $resp = $client->prompt()
+        ->generate("Best shopify product reviews app");
+} catch (Exception $e) {
+    dd($e->getMessage());
 }
 
+
+//->withAudio('/Users/nahid/Downloads/record.ogg')
+
+dd($resp->getBody()->getContents());
+
+/*->withFunctions(
+    Func::create('topSellingProducts', 'List of top selling products')
+        ->addParameter(Parameter::create('limit', 'number', 'Limit of products to return', true))
+        ->addParameter(Parameter::create('category', 'string', 'Category of products to return', false)),
+    Func::create('getProduct', 'Get a product by title')
+        ->addParameter(Parameter::create('title', 'string', 'Product title', true)),
+    Func::create('offerProducts', 'List of offered products')
+        ->addParameter(Parameter::create('percents', 'number', 'Discount percents', true))
+        ->addParameter(Parameter::create('limit', 'number', 'Limit of products to return'))
+)*/
