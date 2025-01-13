@@ -43,15 +43,13 @@ class Payload
 
         if ($type === RequestType::CONTENT) {
             $this->baseUri->append($this->version)
-                ->append($this->model)
-                ->append(':generateContent');
+                ->append('models/' . $this->model . ':streamGenerateContent');
         }
 
         if ($type === RequestType::STREAM) {
             $this->queryParams()->add('alt', 'sse');
             $this->baseUri->append($this->version)
-                ->append($this->model)
-                ->append(':streamGenerateContent');
+                ->append('models/'. $this->model . ':streamGenerateContent');
         }
 
         /*if ($type === RequestType::UPLOAD) {

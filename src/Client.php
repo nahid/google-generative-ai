@@ -25,7 +25,7 @@ class Client
 
     private ?string $baseUri =  null;
     private ?Closure $streamHandler = null;
-    private string $model = 'models/gemini-1.5-flash';
+    private string $model = 'gemini-1.5-flash';
     private string $version = 'v1beta';
 
     public function __construct(string $apiKey = null)

@@ -2,7 +2,7 @@
   <configuration default="false" name="Run GenAI" type="PhpLocalRunConfigurationType" factoryName="PHP Console" path="$PROJECT_DIR$/example/index.php">
     <CommandLine>
       <envs>
-        <env name="GEMINI_API_KEY" value="AIzaSyA8TNQGf4Gw1TvYcee7eJQ0qi-2ZpdSsOY" />
+        <env name="GEMINI_API_KEY" value="AIzaSyAaKsQwNdjsIGd0YvTSHddG9RbvuJNCEqU" />
       </envs>
     </CommandLine>
     <method v="2" />

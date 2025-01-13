@@ -9,11 +9,12 @@ use Nahid\GoogleGenerativeAI\Prompts\Concerns\Functions\Parameter;
 
 
 $client = GoogleGenAI::client(getenv('GEMINI_API_KEY'))
+//    ->withModel('gemini-2.0-flash-exp')
     ->make();
 
 try {
     $resp = $client->prompt()
-        ->generate("Best shopify product reviews app");
+        ->generate("Please create an image for me, the context is: a boy playing with a red ball in the park");
 } catch (Exception $e) {
     dd($e->getMessage());
 }
