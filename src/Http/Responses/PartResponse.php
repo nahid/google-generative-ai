@@ -2,7 +2,9 @@
 
 namespace Nahid\GoogleGenerativeAI\Http\Responses;
 
-class PartResponse
+use Nahid\GoogleGenerativeAI\Contracts\Arrayable;
+
+class PartResponse implements Arrayable
 {
     public function __construct(
         public string $text,
@@ -11,4 +13,17 @@ class PartResponse
 
     }
 
+    public static function create(
+        string $text,
+    ): static
+    {
+        return new static($text);
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'text' => $this->text,
+        ];
+    }
 }

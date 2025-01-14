@@ -14,7 +14,7 @@ $client = GoogleGenAI::client(getenv('GEMINI_API_KEY'))
 
 try {
     $resp = $client->prompt()
-        ->generate("Please create an image for me, the context is: a boy playing with a red ball in the park");
+        ->generate("Give me the current weather information in Dhaka.");
 } catch (Exception $e) {
     dd($e->getMessage());
 }
@@ -22,7 +22,13 @@ try {
 
 //->withAudio('/Users/nahid/Downloads/record.ogg')
 
-dd($resp->getBody()->getContents());
+dd($resp->toArray());
+
+foreach ($resp as $chunk) {
+    foreach ($chunk->getCandidates() as $candidate) {
+        echo $candidate->content->getParts()[0]->text . PHP_EOL;
+    }
+}
 
 /*->withFunctions(
     Func::create('topSellingProducts', 'List of top selling products')

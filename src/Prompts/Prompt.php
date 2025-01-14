@@ -4,6 +4,8 @@ namespace Nahid\GoogleGenerativeAI\Prompts;
 
 use Exception;
 use Nahid\GoogleGenerativeAI\Enums\RunType;
+use Nahid\GoogleGenerativeAI\Http\Responses\Response;
+use Nahid\GoogleGenerativeAI\Http\Responses\ResponseChunk;
 use Nahid\GoogleGenerativeAI\Http\Values\Payload;
 use Nahid\GoogleGenerativeAI\Prompts\Concerns\Audio;
 use Nahid\GoogleGenerativeAI\Prompts\Concerns\Document;
@@ -30,11 +32,19 @@ class Prompt
 
     private ?RunType $run = null;
 
+    private array $generationConfig = [
+        'max_output_tokens' => 2048,
+        'temperature' => 0.5,
+    ];
+
     public function __construct(
-     private readonly CredentialsDTO $creds
+     private readonly CredentialsDTO $creds,
+        array $generationConfig = []
     )
     {
-
+        if (!empty($generationConfig)) {
+            $this->generationConfig = $generationConfig;
+        }
     }
 
     public function withImage(string $path): self
@@ -134,7 +144,13 @@ class Prompt
         $transporter = $this->creds->getTransporter();
 
 
-        return $transporter->requestContent($this->promptGenerate($prompt));
+        $response =  $transporter->requestContent($this->promptGenerate($prompt));
+
+        if ($response->getStatusCode() !== 200) {
+            throw new Exception('Failed to generate content');
+        }
+
+        return new Response(json_decode($response->getBody()->getContents(), true));
     }
 
     public function stream(string $prompt)
@@ -155,12 +171,15 @@ class Prompt
                     ],
                     ... $this->getFileDataParams(),
                 ]
-            ]
+            ],
+            'generation_config' => $this->generationConfig,
         ];
 
         if (!empty($this->tools)) {
             $payloadSchema['tools'] = $this->tools;
         }
+
+//        dd($payloadSchema);
 
         return Payload::create()
             ->withBaseUri($this->creds->getBaseUri()->new())

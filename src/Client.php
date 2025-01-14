@@ -99,9 +99,11 @@ class Client
     }
 
 
-    public function prompt(): Prompt
+    public function prompt(array $config = []): Prompt
     {
-        return new Prompt(CredentialsDTO::create($this->transporter, BaseUri::from($this->baseUri), $this->apiKey, $this->model, $this->version));
+        return new Prompt(
+            CredentialsDTO::create($this->transporter, BaseUri::from($this->baseUri), $this->apiKey, $this->model, $this->version),
+            $config);
     }
 
 

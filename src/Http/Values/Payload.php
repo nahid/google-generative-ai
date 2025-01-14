@@ -43,7 +43,7 @@ class Payload
 
         if ($type === RequestType::CONTENT) {
             $this->baseUri->append($this->version)
-                ->append('models/' . $this->model . ':streamGenerateContent');
+                ->append('models/' . $this->model . ':generateContent');
         }
 
         if ($type === RequestType::STREAM) {
