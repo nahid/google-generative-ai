@@ -13,12 +13,21 @@ $client = GoogleGenAI::client(getenv('GEMINI_API_KEY'))
     ->make();
 
 try {
-    $resp = $client->prompt()
-        ->generate("Give me the current weather information in Dhaka.");
+    $resp = $client->prompt([
+        'max_output_tokens' => 10000,
+    ])
+        ->stream("Give a detail about Albert Einstein. Write a detailed biography of Albert Einstein.");
 } catch (Exception $e) {
     dd($e->getMessage());
 }
 
+foreach ($resp as $chunk) {
+    foreach ($chunk->candidates as $candidate) {
+        echo $candidate->content->parts[0]->text . PHP_EOL;
+    }
+}
+
+die();
 
 //->withAudio('/Users/nahid/Downloads/record.ogg')
 

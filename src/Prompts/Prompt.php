@@ -6,6 +6,7 @@ use Exception;
 use Nahid\GoogleGenerativeAI\Enums\RunType;
 use Nahid\GoogleGenerativeAI\Http\Responses\Response;
 use Nahid\GoogleGenerativeAI\Http\Responses\ResponseChunk;
+use Nahid\GoogleGenerativeAI\Http\Responses\ResponseStream;
 use Nahid\GoogleGenerativeAI\Http\Values\Payload;
 use Nahid\GoogleGenerativeAI\Prompts\Concerns\Audio;
 use Nahid\GoogleGenerativeAI\Prompts\Concerns\Document;
@@ -139,7 +140,7 @@ class Prompt
         return array_map(fn(FileDataDTO $file) => ['file_data' => $file->toArray()], $this->files);
     }
 
-    public function generate(string $prompt)
+    public function generate(string $prompt): Response
     {
         $transporter = $this->creds->getTransporter();
 
@@ -153,12 +154,14 @@ class Prompt
         return new Response(json_decode($response->getBody()->getContents(), true));
     }
 
-    public function stream(string $prompt)
+    public function stream(string $prompt): ResponseStream
     {
         $transporter = $this->creds->getTransporter();
 
 
-        return $transporter->requestStream($this->promptGenerate($prompt));
+        $response = $transporter->requestStream($this->promptGenerate($prompt));
+
+        return new ResponseStream($response);
     }
 
     protected function promptGenerate(string $prompt): Payload

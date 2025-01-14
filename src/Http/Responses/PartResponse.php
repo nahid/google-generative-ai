@@ -7,7 +7,7 @@ use Nahid\GoogleGenerativeAI\Contracts\Arrayable;
 class PartResponse implements Arrayable
 {
     public function __construct(
-        public string $text,
+        public readonly string $text,
     )
     {
 
