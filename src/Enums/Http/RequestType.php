@@ -11,4 +11,5 @@ enum RequestType
     case UPLOAD;
 
     case RESUMABLE_UPLOAD;
+    case API;
 }

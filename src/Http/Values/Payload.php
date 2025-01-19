@@ -65,6 +65,12 @@ class Payload
                 ->append('files');
         }
 
+        if ($type === RequestType::API) {
+            $this->withContentType(ContentType::JSON->value);
+        }
+
+
+
 
         if ($this->method === Method::POST) {
             if ($type === RequestType::UPLOAD && $this->getContentType() === ContentType::MULTIPART->value) {
@@ -141,6 +147,13 @@ class Payload
     public function withBaseUri(BaseUri $uri): self
     {
         $this->baseUri = $uri;
+
+        return $this;
+    }
+
+    public function withMethod(Method $method): self
+    {
+        $this->method = $method;
 
         return $this;
     }

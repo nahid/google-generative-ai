@@ -19,7 +19,7 @@ class Response implements Arrayable
     {
         $candidates = [];
         foreach ($data['candidates'] as $candidate) {
-            $this->candidates[] = CandidateResponse::create(ContentResponse::create($candidate['content']), $candidate['finishReason'] ?? null);
+            $candidates[] = CandidateResponse::create(ContentResponse::create($candidate['content']), $candidate['finishReason'] ?? null);
         }
 
         $this->candidates = $candidates;

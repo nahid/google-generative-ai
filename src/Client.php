@@ -106,6 +106,13 @@ class Client
             $config);
     }
 
+    public function api(): Api
+    {
+        return new Api(
+            CredentialsDTO::create($this->transporter, BaseUri::from($this->baseUri), $this->apiKey, $this->model, $this->version)
+        );
+    }
+
 
 
     private function  makeStreamHandler(ClientInterface $client): Closure

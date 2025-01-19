@@ -2,6 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
+use Nahid\GoogleGenerativeAI\Enums\Response\SchemaDataType;
 use Nahid\GoogleGenerativeAI\GoogleGenAI;
 use Nahid\GoogleGenerativeAI\Prompts\Concerns\Functions\Func;
 use Nahid\GoogleGenerativeAI\Prompts\Concerns\Functions\Parameter;
@@ -9,29 +10,47 @@ use Nahid\GoogleGenerativeAI\Prompts\Concerns\Functions\Parameter;
 
 
 $client = GoogleGenAI::client(getenv('GEMINI_API_KEY'))
-//    ->withModel('gemini-2.0-flash-exp')
     ->make();
+
+$resp = $client->api()->cachedContents();
+
+dd($resp->getBody()->getContents());
 
 try {
     $resp = $client->prompt([
         'max_output_tokens' => 10000,
+        'response_mime_type' => 'application/json',
+        'response_schema' => [
+            'type' => SchemaDataType::ARRAY,
+            'items' => [
+                'type' => SchemaDataType::OBJECT,
+                'properties' => [
+                    'movie_name' => [
+                        'type' => SchemaDataType::STRING
+                    ],
+                    'year' => [
+                        'type' => SchemaDataType::INTEGER
+                    ]
+                ]
+            ]
+        ]
     ])
-        ->stream("Give a detail about Albert Einstein. Write a detailed biography of Albert Einstein.");
+        ->generate("List of top 10 action movies with year");
 } catch (Exception $e) {
     dd($e->getMessage());
 }
 
-foreach ($resp as $chunk) {
+/*foreach ($resp as $chunk) {
     foreach ($chunk->candidates as $candidate) {
         echo $candidate->content->parts[0]->text . PHP_EOL;
     }
 }
 
-die();
+die();*/
 
 //->withAudio('/Users/nahid/Downloads/record.ogg')
 
-dd($resp->toArray());
+dd($resp->candidates[0]->content->parts[0]->text);
 
 foreach ($resp as $chunk) {
     foreach ($chunk->getCandidates() as $candidate) {
