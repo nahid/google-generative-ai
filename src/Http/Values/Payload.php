@@ -72,7 +72,7 @@ class Payload
 
 
 
-        if ($this->method === Method::POST) {
+        if ($this->method === Method::POST || $this->method === Method::PATCH) {
             if ($type === RequestType::UPLOAD && $this->getContentType() === ContentType::MULTIPART->value) {
                 $streamBuilder = new MultipartStreamBuilder($psr17Factory);
 
@@ -131,7 +131,7 @@ class Payload
 
         $request = $psr17Factory->createRequest($this->getMethod()->value, $this->baseUri->toString() . $query);
 
-        if ($this->method !== Method::GET) {
+        if ($this->method !== Method::GET && $this->method !== Method::DELETE) {
             $request = $request->withBody($body);
         }
 

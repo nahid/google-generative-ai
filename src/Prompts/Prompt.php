@@ -23,6 +23,8 @@ class Prompt
      * @var array<int, FileDataDTO>
      */
     private array $files = [];
+
+    private ?string $cachedContent = null;
     /**
      * @var true
      */
@@ -81,6 +83,13 @@ class Prompt
         $document = new Document($this->creds);
 
         $this->files[] = $document->upload($path);
+
+        return $this;
+    }
+
+    public function withCachedContent(string $name): self
+    {
+        $this->cachedContent = $name;
 
         return $this;
     }
@@ -177,6 +186,10 @@ class Prompt
             ],
             'generation_config' => $this->generationConfig,
         ];
+
+        if (!is_null($this->cachedContent)) {
+            $payloadSchema['cachedContent'] = $this->cachedContent;
+        }
 
         if (!empty($this->tools)) {
             $payloadSchema['tools'] = $this->tools;

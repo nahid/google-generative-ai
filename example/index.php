@@ -12,9 +12,10 @@ use Nahid\GoogleGenerativeAI\Prompts\Concerns\Functions\Parameter;
 $client = GoogleGenAI::client(getenv('GEMINI_API_KEY'))
     ->make();
 
-$resp = $client->api()->cachedContents();
+$resp = $client->api()->cacheContents()
+    ->delete('cachedContents/r4stztuteeuv');
 
-dd($resp->getBody()->getContents());
+dd($resp->getBody()->getContents(), $resp->getStatusCode());
 
 try {
     $resp = $client->prompt([
